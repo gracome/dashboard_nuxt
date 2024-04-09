@@ -1,5 +1,7 @@
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
+  ssr: false,
+  target: 'static',
   head: {
     title: 'my-nuxt-app',
     htmlAttrs: {
@@ -14,14 +16,14 @@ export default {
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Material+Icons'},
-      { rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css'},
+      { rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css', integrity: 'sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3', crossorigin: 'anonymous' },
       { rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.4/nouislider.min.css'},
-      { rel: 'stylesheet', href: 'https://cdn.datatables.net/buttons/1.6.4/css/buttons.dataTables.min.css'},
-      { rel: 'script', href: 'https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js', integrity: 'sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r', crossorigin: "anonymous" },
-      { rel: 'script', href: 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js', integrity: 'sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz'},
-      { rel: 'script', href: 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js'}
-  
-    ]
+      { rel: 'stylesheet', href: 'https://cdn.datatables.net/buttons/1.6.4/css/buttons.dataTables.min.css'}
+    ],
+    script: [
+      { src: 'https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js', integrity: 'sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB', crossorigin: 'anonymous' },
+      { src: 'https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js', integrity: 'sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p', crossorigin: 'anonymous' }
+  ]
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -119,6 +121,9 @@ export default {
     '@/assets/vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js'
 
   ],
+  generate: {
+    dir: 'dist/client'
+  },
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
   }

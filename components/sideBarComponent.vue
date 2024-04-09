@@ -3,8 +3,8 @@
     <div class="deznav-scroll">
       <ul class="metismenu" id="menu">
         <li class="menu-title">MOOV BENIN</li>
-        <!-- <li id="dashboard">
-          <a class="has-arrow" href="javascript:void(0);" aria-expanded="false">
+        <li :class="{ 'mm-active': $route.path === '/' }">
+          <router-link to="/" active-class="mm-active" >  
             <div class="menu-icon">
               <svg
                 width="20"
@@ -28,23 +28,9 @@
               </svg>
             </div>
             <span class="nav-text">Dashboard</span>
-          </a>
-          <ul aria-expanded="false">
-            <li :class="{ 'mm-active': selectedAction === 'analytics' }">
-              <router-link to="/">
-              
-                <span class="nav-text">Analytics</span>
-            </router-link>
-            </li>
+          </router-link>
 
-            <li :class="{ 'mm-active': selectedAction === 'listing' }">
-              <router-link to="/listing">
-                
-                <span class="nav-text">Listings</span>
-            </router-link>
-            </li>
-          </ul>
-        </li> -->
+        </li> 
         <li>
           <a class="has-arrow" href="javascript:void(0);" aria-expanded="false" @click="toggleMenu(1)">
             <div class="menu-icon">

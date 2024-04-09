@@ -1,12 +1,61 @@
 <template>
+<div>
+  <div class="row mb-3 pb-1">
+    <div class="col-12">
+      <div class="d-flex align-items-lg-center flex-lg-row flex-column">
+        <div class="flex-grow-1">
+          <h4 class="fs-16 mb-1">
+            {{ "Salut, " + $store.state.currentUser?.first_name }} !
+          </h4>
+          <p class="text-muted mb-0">
+            Ci-dessous les statistiques de votre application au cours des
+            dernières 24 heures.
+          </p>
+        </div>
+        <div class="mt-3 mt-lg-0">
+          <form action="javascript:void(0);">
+            <div class="row g-3 mb-0 align-items-center">
+              <div class="col-sm-auto">
+                <div class="input-group">
+                  <input
+                    type="text"
+                    ref="datePicker"
+                    class="form-control border-0 minimal-border dash-filter-picker shadow flatpickr-input"
+                    data-provider="flatpickr"
+                    data-range-date="true"
+                    data-date-format="d M, Y"
+                    readonly="readonly"
+                  />
+                  <div
+                    class="input-group-text bg-primary border-primary text-white"
+                  >
+                    <i class="fa-solid fa-calendar-days"></i>
+                  </div>
+                </div>
+              </div>
+              <!--end col-->
+
+              <!--end col-->
+
+              <!--end col-->
+            </div>
+            <!--end row-->
+          </form>
+        </div>
+      </div>
+      <!-- end card header -->
+    </div>
+    <!--end col-->
+  </div>
   <div class="row">
-    <div class="col-xl-3 col-sm-6">
+    <div class="col-xl-4 col-sm-6">
       <div class="card chart-grd same-card">
         <div class="card-body depostit-card p-0">
           <div class="depostit-card-media d-flex justify-content-between pb-0">
             <div>
-              <h6>Total Deposit</h6>
-              <h3>$1200.00</h3>
+              <h6>Total des sessions</h6>
+              <h3>{{ appState?.session_number || "00" }}</h3>
+             
             </div>
             <div class="icon-box bg-primary-light">
               <svg
@@ -23,63 +72,17 @@
               </svg>
             </div>
           </div>
-          <div id="NewCustomers"></div>
         </div>
       </div>
     </div>
-    <div class="col-xl-3 col-sm-6">
-      <div class="card same-card">
-        <div class="card-body d-flex align-items-center py-2">
-          <div id="AllProject"></div>
-          <ul class="project-list">
-            <li><h6>All Projects</h6></li>
-            <li>
-              <svg
-                width="10"
-                height="10"
-                viewBox="0 0 10 10"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <rect width="10" height="10" rx="3" fill="#3AC977" />
-              </svg>
-              Compete
-            </li>
-            <li>
-              <svg
-                width="10"
-                height="10"
-                viewBox="0 0 10 10"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <rect width="10" height="10" rx="3" fill="var(--primary)" />
-              </svg>
-              Pending
-            </li>
-            <li>
-              <svg
-                width="10"
-                height="10"
-                viewBox="0 0 10 10"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <rect width="10" height="10" rx="3" fill="var(--secondary)" />
-              </svg>
-              Not Start
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <div class="col-xl-3 col-sm-6">
+
+    <div class="col-xl-4 col-sm-6">
       <div class="card chart-grd same-card">
         <div class="card-body depostit-card p-0">
           <div class="depostit-card-media d-flex justify-content-between pb-0">
             <div>
-              <h6>Total Expenses</h6>
-              <h3>$1200.00</h3>
+              <h6>Montant total des forfaits</h6>
+              <h3>${{ appState?.bundle_amount || "00" }}</h3>
             </div>
             <div class="icon-box bg-danger-light">
               <svg
@@ -96,20 +99,19 @@
               </svg>
             </div>
           </div>
-          <div id="NewExperience"></div>
         </div>
       </div>
     </div>
 
-    <div class="col-xl-3 col-sm-6 same-card">
+    <div class="col-xl-4 col-sm-6 same-card">
       <div class="card">
         <div class="card-body depostit-card">
           <div
             class="depostit-card-media d-flex justify-content-between style-1"
           >
             <div>
-              <h6>Total Deposit</h6>
-              <h3>20</h3>
+              <h6>Total Session unique</h6>
+              <h3>{{ appState?.unique_session_number || "00"}}</h3>
             </div>
             <div class="icon-box bg-primary-light">
               <svg
@@ -142,21 +144,98 @@
               </svg>
             </div>
           </div>
-          <div class="progress-box mt-0">
-            <div class="d-flex justify-content-between">
-              <p class="mb-0">Tasks Not Finished</p>
-              <p class="mb-0">20/28</p>
-            </div>
-            <div class="progress">
-              <div
-                class="progress-bar bg-primary"
-                style="width: 50%; height: 5px; border-radius: 4px"
-                role="progressbar"
-              ></div>
-            </div>
-          </div>
+       
         </div>
       </div>
     </div>
   </div>
+</div>
 </template>
+
+<script>
+import flatpickr from "flatpickr";
+import "flatpickr/dist/flatpickr.min.css";
+// import ApexCharts from "apexcharts";
+
+export default {
+  data() {
+    return {
+      statistiquesRegroupees: "",
+    };
+  },
+  mounted() {
+    const currentDate = new Date();
+
+    const twentyFourHoursAgo = new Date(
+      currentDate.getTime() - 24 * 60 * 60 * 1000
+    );
+
+    const startDate = twentyFourHoursAgo.toISOString().split("T")[0];
+    const endDate = currentDate.toISOString().split("T")[0];
+
+    this.$store.dispatch("fetchAppState", {
+      startDate,
+      endDate,
+      page: 1, // Page par défaut
+      limit: 20, // Limite par défaut
+    });
+    this.loadStatistiques();
+    const datePickerInput = this.$refs.datePicker;
+    flatpickr(datePickerInput, {
+      mode: "range",
+      dateFormat: "Y-m-d",
+      defaultDate: [twentyFourHoursAgo, currentDate], // Sélectionnez les dates par défaut
+      onChange: (selectedDates) => {
+        if (selectedDates.length === 2) {
+          const startDate = selectedDates[0].toISOString().split("T")[0];
+          const endDate = selectedDates[1].toISOString().split("T")[0];
+          const page = 1; // Facultatif, remplacez par la valeur souhaitée
+          const limit = 20;
+          this.$store.dispatch("fetchAppState", {
+            startDate,
+            endDate,
+            page,
+            limit,
+          });
+        }
+        this.loadStatistiques();
+      },
+    });
+
+  },
+  computed: {
+    appState() {
+      if (this.$store.state.states.length > 1) {
+         this.loadStatistiques();
+        return this.statistiquesRegroupees;
+      } else {
+       
+        return this.$store.state.states[0];
+      }
+    },
+  },
+  methods: {
+    loadStatistiques() {
+      const statistiques = this.$store.state.states;
+      if (statistiques?.length > 1) {
+        let sessionTotal = 0;
+        let uniqueSessionTotal = 0;
+        let bundle_amountTotal = 0;
+        console.log(statistiques);
+        if (Array.isArray(statistiques)) {
+        statistiques.forEach((item) => {
+          sessionTotal += item.session_number || 0;
+          uniqueSessionTotal += item.unique_session_number || 0;
+          bundle_amountTotal += item.bundle_amount;
+        });
+        this.statistiquesRegroupees = {
+          session_number: sessionTotal,
+          unique_session_number: uniqueSessionTotal,
+          bundle_amount: bundle_amountTotal,
+        };
+        }
+      } 
+    },
+  },
+};
+</script>

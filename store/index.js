@@ -60,7 +60,11 @@ export default {
     groupes: [],
     userLogs: [],
     currentPage: 1,
-    totalPage: ""
+    totalPage: "",
+    statistiques: [],
+    bundleState: "",
+    statistiqueDetails: "",
+    states: ""
 
 
 
@@ -145,6 +149,18 @@ export default {
     },
     setMode(state, mode){
       state.mode = mode
+    },
+    setStatistiques(state, statistique){
+      state.statistiques = statistique
+    },
+    setBundleStatistiques(state, bundle){
+      state.bundleState = bundle
+    },
+    setStatistiqueDetails(state, details){
+      state.statistiqueDetails = details
+    },
+    setState(state, appState){
+      state.states = appState
     }
 
   },
@@ -268,6 +284,65 @@ export default {
           console.error('Error fetching category:', error);
         });
     },
+    async fetchStatistiques({ commit }, { start_date, end_date, page = 1, limit = 20, group_by }) {
+      const token = getCookie("token")
+      axios.get(process.env.VUE_APP_STATISTIQUES_URL + `/m-api-statistic/all?group_by=${group_by}&page=${page}&limit=${limit}&start_date=${start_date}&end_date=${end_date}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+        .then(response => {
+          commit('setStatistiques', response.data);
+        })
+        .catch(error => {
+          console.error('Error fetching category:', error);
+        });
+    },
+    fetchBundleStatistiques({ commit, state }, { start_date, end_date, limit = 20 }) {
+      const token = getCookie("token")
+      axios.get(process.env.VUE_APP_STATISTIQUES_URL + `/m-api-statistic/bundle?page=${state.currentPage}&limit=${limit}&start_date=${start_date}&end_date=${end_date}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+        .then(response => {
+          commit('setBundleStatistiques', response.data);
+        })
+        .catch(error => {
+          console.error('Error fetching category:', error);
+        });
+    },
+  async  fetchStatistiqueDetails({ commit, state }, { start_date, end_date, limit = 20 }) {
+      const token = getCookie("token")
+      axios.get(process.env.VUE_APP_STATISTIQUES_URL + `/m-api-statistic/details?page=${state.currentPage}&limit=${limit}&start_date=${start_date}&end_date=${end_date}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+        .then(response => {
+          commit('setStatistiqueDetails', response.data);
+          
+        })
+        .catch(error => {
+          console.error('Error fetching category:', error);
+        });
+    },
+   async fetchAppState({ commit }, { startDate, endDate, page = 1, limit = 20 }) {
+      const token = getCookie("token");
+      const url = `${process.env.VUE_APP_STATISTIQUES_URL}/m-api-statistic/app-stat?group_by=day-month-year&page=${page}&limit=${limit}&start_date=${startDate}&end_date=${endDate}`;
+      
+      axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      .then(response => {
+        commit('setState', response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching statistics:', error);
+      });
+    }
   },
   modules: {
   }

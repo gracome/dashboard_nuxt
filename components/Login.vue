@@ -123,10 +123,7 @@ export default {
             if (response.status === 200 && response.data.error) {
               this.error_message = response.data.error;
             } else if (response.status === 200 && !response.data.error) {
-              // const expiresInDays = new Date(response.data.expires_at);
-              // const expiresInMilliseconds = expiresAt.getTime() - Date.now();
-              // const expiresAt = expiresInMilliseconds / (1000 * 60 * 60 * 24);
-
+              
               var expiresDate = new Date(response.data.expires_at);
               var expiresUTCString = expiresDate.toUTCString();
               document.cookie =
@@ -136,7 +133,7 @@ export default {
                 expiresUTCString +
                 "; path=/";
               const redirectPath =
-              localStorage.getItem("redirectPath") || "/users"; // Définissez une route par défaut
+              localStorage.getItem("redirectPath") || "/"; // Définissez une route par défaut
             localStorage.removeItem("redirectPath"); // Supprimez la route précédente après utilisation
             this.$router.push(redirectPath);
            
